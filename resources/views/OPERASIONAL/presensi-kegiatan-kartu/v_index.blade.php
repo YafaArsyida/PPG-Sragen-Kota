@@ -35,6 +35,7 @@
         <header class="border-bottom bg-white">
             <div class="container-fluid px-4 px-xl-5">
                 <div class="d-flex align-items-center justify-content-between" style="height: 72px;">
+
                     {{-- BRAND --}}
                     <div class="d-flex align-items-center gap-3">
 
@@ -59,10 +60,12 @@
                     {{-- HEADER INFO --}}
                     <div class="d-flex align-items-center gap-4">
 
+                        {{-- TANGGAL --}}
                         <div class="text-end d-none d-md-block">
                             <div class="fw-semibold text-dark">
                                 {{ now()->locale('id')->translatedFormat('l, d F Y') }}
                             </div>
+
                             <small class="text-muted">
                                 Operasional Presensi
                             </small>
@@ -70,15 +73,34 @@
 
                         <div class="vr d-none d-md-block"></div>
 
+                        {{-- JAM --}}
                         <div class="text-end">
                             <div id="realtime-clock" class="fw-bold text-dark fs-5">
                                 --:--:--
                             </div>
+
                             <small class="text-muted">
                                 WIB
                             </small>
                         </div>
+
+                        {{-- FULLSCREEN --}}
+                        <div class="vr"></div>
+
+                        <div class="header-item">
+                            <button
+                                type="button"
+                                id="btn-fullscreen"
+                                class="btn btn-icon btn-topbar rounded-circle shadow-none"
+                                data-toggle="fullscreen"
+                                title="Layar penuh"
+                            >
+                                <i class="bx bx-fullscreen fs-22"></i>
+                            </button>
+                        </div>
+
                     </div>
+
                 </div>
             </div>
         </header>
@@ -620,6 +642,59 @@
         </footer>
 
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            const button = document.getElementById('btn-fullscreen');
+            const icon = document.getElementById('fullscreen-icon');
+
+            if (!button) return;
+
+            button.addEventListener('click', function () {
+
+                if (!document.fullscreenElement) {
+
+                    document.documentElement.requestFullscreen()
+                        .then(() => {
+                            icon.classList.remove('bx-fullscreen');
+                            icon.classList.add('bx-exit-fullscreen');
+
+                            button.setAttribute('title', 'Keluar dari layar penuh');
+                        })
+                        .catch((error) => {
+                            console.error('Fullscreen gagal:', error);
+                        });
+
+                } else {
+
+                    document.exitFullscreen();
+
+                }
+
+            });
+
+            document.addEventListener('fullscreenchange', function () {
+
+                if (document.fullscreenElement) {
+
+                    icon.classList.remove('bx-fullscreen');
+                    icon.classList.add('bx-exit-fullscreen');
+
+                    button.setAttribute('title', 'Keluar dari layar penuh');
+
+                } else {
+
+                    icon.classList.remove('bx-exit-fullscreen');
+                    icon.classList.add('bx-fullscreen');
+
+                    button.setAttribute('title', 'Layar penuh');
+
+                }
+
+            });
+
+        });
+    </script>
     <!-- JAVASCRIPT -->
     <script src="{{asset('assets')}}/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="{{asset('assets')}}/libs/simplebar/simplebar.min.js"></script>
