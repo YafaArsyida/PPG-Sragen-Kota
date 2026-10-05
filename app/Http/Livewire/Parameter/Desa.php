@@ -26,6 +26,11 @@ class Desa extends Component
             return ModelsDesa::query()->whereRaw('1 = 0');
         }
 
+        // Memiliki akses seluruh daerah
+        if ($aksesPengguna->contains('scope_type', 'daerah')) {
+            return ModelsDesa::query();
+        }
+
         $query = ModelsDesa::query();
 
         $query->where(function ($q) use ($aksesPengguna) {
@@ -33,13 +38,6 @@ class Desa extends Component
             foreach ($aksesPengguna as $akses) {
 
                 switch ($akses->scope_type) {
-
-                    // akses daerah -> semua desa dalam daerah
-                    case 'daerah':
-
-                        $q->orWhere('ms_daerah_id', $akses->scope_id);
-
-                        break;
 
                     // akses desa -> desa tersebut
                     case 'desa':
